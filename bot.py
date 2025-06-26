@@ -5,12 +5,12 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # =========== CONFIGURE THESE ===========
-API_ID = 1234567  # your api_id from my.telegram.org
-API_HASH = "your_api_hash"
-BOT_TOKEN = "your_bot_token"
+API_ID = 29569239  # your api_id from my.telegram.org
+API_HASH = "b2407514e15f24c8ec2c735e8018acd7"
+BOT_TOKEN = "7915422206:AAHTZkpxY4y0kNEldqswL-itG3XyethDTOU"
 
 SOURCE_GROUPS = [-1002871766358]      # Source group ID for CC logs
-TARGET_CHANNEL = "@yourchannelusername"  # Use @username, or numeric ID if public and bot is admin
+TARGET_CHANNEL = "@testsyueue"  # Use @username, or numeric ID if public and bot is admin
 
 MAIN_CHANNEL_LINK = "https://t.me/YOUR_MAIN_CHANNEL"
 BACKUP_CHANNEL_LINK = "https://t.me/YOUR_BACKUP_CHANNEL"
@@ -76,8 +76,8 @@ async def cc_scraper(client, message):
         msg = format_card_message(cc, bin_info)
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("👉 Main Channel", url=MAIN_CHANNEL_LINK),
-                InlineKeyboardButton("🔄 Backup Channel", url=BACKUP_CHANNEL_LINK),
+                InlineKeyboardButton("Main Channel", url=https://t.me/approvedccm),
+                InlineKeyboardButton("Backup Channel", url=https://t.me/+70mI9Ce2U_JlMGJl),
             ]
         ])
         try:
