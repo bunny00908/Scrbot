@@ -1,5 +1,6 @@
 import re
 import aiohttp
+import logging
 from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -7,16 +8,21 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # =========== CONFIGURE THESE ===========
 API_ID = 29569239  # your api_id from my.telegram.org
 API_HASH = "b2407514e15f24c8ec2c735e8018acd7"
-BOT_TOKEN = "7915422206:AAHTZkpxY4y0kNEldqswL-itG3XyethDTOU"
+BOT_TOKEN = "7617922225:AAE7xRwHXK--FWUo_MdlaKm1ZT-7gkuu4Nk"  # Get a new one from @BotFather
 
-SOURCE_GROUPS = [-1002621183707]      # Source group ID for CC logs
-TARGET_CHANNEL = "-1002871766358"  # Use @username, or numeric ID if public and bot is admin
+SOURCE_GROUPS = [-1002621183707]  # Telegram group ID where the bot listens for messages
+TARGET_CHANNEL = -1002871766358   # Must be an integer (no quotes), and bot must be an admin
 
 MAIN_CHANNEL_LINK = "https://t.me/approvedccm"
 BACKUP_CHANNEL_LINK = "https://t.me/+70mI9Ce2U_JlMGJl"
 # =======================================
 
+# Enable logging to see issues
+logging.basicConfig(level=logging.INFO)
+
 app = Client("scrbot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+
+# ================= Utility Functions ===================
 
 async def get_bin_info(bin_number):
     url = f"https://bins.antipublic.cc/bins/{bin_number}"
@@ -34,7 +40,7 @@ async def get_bin_info(bin_number):
                         "flag": data.get("country_flag", "🌍"),
                     }
     except Exception as e:
-        print(f"BIN lookup failed: {e}")
+        logging.warning(f"BIN lookup failed: {e}")
     return {
         "scheme": "UNKNOWN", "type": "UNKNOWN", "brand": "UNKNOWN",
         "bank": "UNKNOWN", "country": "UNKNOWN", "flag": "🌍"
@@ -64,36 +70,46 @@ def format_card_message(cc, bin_info):
         "[ϟ] 𝗦𝗰𝗿𝗮𝗽𝗽𝗲𝗱 𝗕𝘆 : Bᴜɴɴʏ"
     )
 
+# ================= Listener ===================
+
 @app.on_message(filters.chat(SOURCE_GROUPS))
 async def cc_scraper(client, message):
     text = message.text or message.caption
     cards = extract_credit_cards(text)
     if not cards:
         return
+
     for cc in cards:
         bin_number = cc[0][:6]
         bin_info = await get_bin_info(bin_number)
         msg = format_card_message(cc, bin_info)
+
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Main Channel", url=https://t.me/approvedccm),
-                InlineKeyboardButton("Backup Channel", url=https://t.me/+70mI9Ce2U_JlMGJl),
+                InlineKeyboardButton("Main Channel", url=MAIN_CHANNEL_LINK),
+                InlineKeyboardButton("Backup Channel", url=BACKUP_CHANNEL_LINK),
             ]
         ])
+
         try:
             await app.send_message(
                 TARGET_CHANNEL,
                 msg,
-                parse_mode="html",   # use lowercase for Pyrogram v2.x
+                parse_mode="HTML",
                 reply_markup=keyboard
             )
         except Exception as e:
-            print(f"Send error: {e} -- Retrying without parse_mode")
-            await app.send_message(
-                TARGET_CHANNEL,
-                msg,
-                reply_markup=keyboard
-            )
+            logging.error(f"Send error: {e} -- retrying without parse_mode")
+            try:
+                await app.send_message(
+                    TARGET_CHANNEL,
+                    msg,
+                    reply_markup=keyboard
+                )
+            except Exception as e2:
+                logging.error(f"Second send attempt failed: {e2}")
 
-print("Bot is running. Press Ctrl+C to stop.")
+# ================ Run Bot ==================
+
+print("✅ Bot is running. Press Ctrl+C to stop.")
 app.run()
