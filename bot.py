@@ -9,11 +9,11 @@ API_ID = 29569239  # your api_id from my.telegram.org
 API_HASH = "b2407514e15f24c8ec2c735e8018acd7"
 BOT_TOKEN = "7915422206:AAHTZkpxY4y0kNEldqswL-itG3XyethDTOU"
 
-SOURCE_GROUPS = [-1002871766358]      # Source group ID for CC logs
-TARGET_CHANNEL = "@testsyueue"  # Use @username, or numeric ID if public and bot is admin
+SOURCE_GROUPS = [-1002621183707]      # Source group ID for CC logs
+TARGET_CHANNEL = "-1002871766358"  # Use @username, or numeric ID if public and bot is admin
 
-MAIN_CHANNEL_LINK = "https://t.me/YOUR_MAIN_CHANNEL"
-BACKUP_CHANNEL_LINK = "https://t.me/YOUR_BACKUP_CHANNEL"
+MAIN_CHANNEL_LINK = "https://t.me/approvedccm"
+BACKUP_CHANNEL_LINK = "https://t.me/+70mI9Ce2U_JlMGJl"
 # =======================================
 
 app = Client("scrbot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
